@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Karl](https://up.htmlacademy.ru/javascript/12/user/36130).
-* Наставник: `Неизвестно`.
+* Наставник: `Николай Загорный`.
 
 ---
 
