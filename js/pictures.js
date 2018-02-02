@@ -5,6 +5,8 @@ var MAX_LIKES = 200;
 var MIN_LIKES = 15;
 var MAX_COMMENTS = 2;
 var pictures = [];
+var pictureTemplateElement = document.querySelector('#picture-template').content;
+var picturesElement = document.querySelector('.pictures');
 
 var getRandomNumber = function (max, min) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -19,9 +21,9 @@ var getCommentsArray = function (numOfComments) {
   return comments;
 };
 
-var createPictureoObject = function (index) {
+var generatePictureObject = function (index) {
   return {
-    url: 'photos/' + index + '.jpg',
+    url: '/photos/' + index + '.jpg',
     likes: getRandomNumber(MAX_LIKES, MIN_LIKES),
     comments: getCommentsArray(getRandomNumber(MAX_COMMENTS, 1))
   };
@@ -29,9 +31,27 @@ var createPictureoObject = function (index) {
 
 var generateAllPictures = function () {
   for (var i = 0; i < NUMBER_OF_PICTURES; i++) {
-    pictures[i] = createPictureoObject(i + 1);
+    pictures[i] = generatePictureObject(i + 1);
   }
 };
 
+var renderPicture = function (picture) {
+  var pictureElement = pictureTemplateElement.cloneNode(true);
+  pictureElement.querySelector('img').setAttribute('src', picture.url);
+  pictureElement.querySelector('.picture-likes').textContent = picture.likes;
+  pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
+
+  return pictureElement;
+};
+
+var renderAllPictures = function (element, allPictures) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < allPictures.length; i++) {
+    fragment.appendChild(renderPicture(allPictures[i]));
+  }
+  element.appendChild(fragment);
+};
+
 generateAllPictures();
+renderAllPictures(picturesElement, pictures);
 
