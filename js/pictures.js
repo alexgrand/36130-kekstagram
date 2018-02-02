@@ -24,7 +24,7 @@ var getCommentsArray = function (numOfComments) {
 
 var generatePictureObject = function (index) {
   return {
-    url: '/photos/' + index + '.jpg',
+    url: 'photos/' + index + '.jpg',
     likes: getRandomNumber(MAX_LIKES, MIN_LIKES),
     comments: getCommentsArray(getRandomNumber(MAX_COMMENTS, 1))
   };
