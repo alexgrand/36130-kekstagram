@@ -7,6 +7,7 @@ var MAX_COMMENTS = 2;
 var pictures = [];
 var pictureTemplateElement = document.querySelector('#picture-template').content;
 var picturesElement = document.querySelector('.pictures');
+var galleryOverlayElement = document.querySelector('.gallery-overlay');
 
 var getRandomNumber = function (max, min) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -52,6 +53,13 @@ var renderAllPictures = function (element, allPictures) {
   element.appendChild(fragment);
 };
 
+var renderGalleryOverlay = function (element, picture) {
+  element.classList.remove('hidden');
+  element.querySelector('.gallery-overlay-image').setAttribute('src', picture.url);
+  element.querySelector('.likes-count').textContent = picture.likes;
+  element.querySelector('.comments-count').textContent = picture.comments.length;
+};
+
 generateAllPictures();
 renderAllPictures(picturesElement, pictures);
-
+renderGalleryOverlay(galleryOverlayElement, pictures[0]);
