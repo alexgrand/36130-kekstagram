@@ -57,10 +57,17 @@ var renderAllPictures = function (element, allPictures) {
   element.appendChild(fragment);
 };
 
-var renderOverlay = function (url, likesCount, commentsCount) {
-  overlayImageElement.setAttribute('src', url);
-  likeCountElement.textContent = likesCount;
-  commentsCountElement.textContent = commentsCount;
+var renderOverlay = function (photoElement) {
+  var photoUrl = photoElement.getAttribute('src');
+  var digitIndex = photoUrl.search(/\d/g);
+  var photoFormat = '.jpg';
+  var photoIndex = photoUrl.slice(digitIndex, photoUrl.length - photoFormat.length) - 1;
+  var photoCommentsCount = pictures[photoIndex].comments.length;
+  var photoLikesCount = pictures[photoIndex].likes;
+
+  overlayImageElement.setAttribute('src', photoUrl);
+  likeCountElement.textContent = photoLikesCount;
+  commentsCountElement.textContent = photoCommentsCount;
 };
 
 var openOverlay = function () {
@@ -75,13 +82,8 @@ var closeOverlay = function () {
 var onPicturesElementClick = function (evt) {
   if (evt.target.tagName === 'IMG') {
     evt.preventDefault();
-    var photoElement = evt.target;
-    var photoStatsElement = photoElement.parentNode.querySelector('.picture-stats');
-    var photoCommentsCount = photoStatsElement.querySelector('.picture-comments').textContent;
-    var photoLikesCount = photoStatsElement.querySelector('.picture-likes').textContent;
-    var photoUrl = photoElement.getAttribute('src');
 
-    renderOverlay(photoUrl, photoLikesCount, photoCommentsCount);
+    renderOverlay(evt.target);
     openOverlay();
   }
 };
