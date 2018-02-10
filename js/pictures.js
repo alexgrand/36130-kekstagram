@@ -213,7 +213,7 @@ var basicHandlers = [
   }
 ];
 var openCloseOverlayHandlers = [
-  {element: galleryOverlayElement,
+  {element: overlayCloseElement,
     eventType: 'click',
     handler: onOverlayCloseElementClick
   },
