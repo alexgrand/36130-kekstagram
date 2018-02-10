@@ -147,7 +147,6 @@ var onEffectControlsChange = function (evt) {
     effectLevelElement.classList.remove('hidden');
     effectImagePreviewElement.classList.add('effect-' + effectElement.value);
     usedEffect = effectElement.value;
-    changeSaturationLevel();
   } else {
     effectLevelElement.classList.add('hidden');
   }
