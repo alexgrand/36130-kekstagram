@@ -92,16 +92,26 @@ var onOverlayEscPress = function (evt) {
     closeOverlay();
   }
 };
+
 var openOverlay = function () {
   galleryOverlayElement.classList.remove('hidden');
-  overlayCloseElement.addEventListener('click', onOverlayCloseElementClick);
-  document.addEventListener('keydown', onOverlayEscPress);
+  runHandlers(openCloseOverlayHandlers, true);
 };
 var closeOverlay = function () {
   galleryOverlayElement.classList.add('hidden');
-  overlayCloseElement.removeEventListener('click', onOverlayCloseElementClick);
-  document.removeEventListener('keydown', onOverlayEscPress);
+  runHandlers(openCloseOverlayHandlers, false);
 };
+var openUploadOverlay = function () {
+  uploadOverlay.classList.remove('hidden');
+  effectLevelElement.classList.add('hidden');
+  runHandlers(openCloseUploadHandlers, true);
+};
+var closeUploadOverlay = function () {
+  uploadOverlay.classList.add('hidden');
+  uploadFileElement.value = '';
+  runHandlers(openCloseUploadHandlers, false);
+};
+
 var onOverlayCloseElementClick = function () {
   closeOverlay();
 };
@@ -116,21 +126,6 @@ var onPicturesElementClick = function (evt) {
 
 var onUploadFileChange = function () {
   openUploadOverlay();
-};
-var openUploadOverlay = function () {
-  uploadOverlay.classList.remove('hidden');
-  effectLevelElement.classList.add('hidden');
-  uploadFormCancelElement.addEventListener('click', onUploadFormCancelClick);
-  document.addEventListener('keydown', onUploadOverlayEscPress);
-  effectControlsElement.addEventListener('change', onEffectControlsChange);
-};
-var closeUploadOverlay = function () {
-  uploadOverlay.classList.add('hidden');
-  uploadFileElement.value = '';
-  uploadFormCancelElement.removeEventListener('click', onUploadFormCancelClick);
-  document.removeEventListener('keydown', onUploadOverlayEscPress);
-  effectLevelPinElement.removeEventListener('mouseup', onEffectLevelPinMouseup);
-  effectControlsElement.removeEventListener('change', onEffectControlsChange);
 };
 var onUploadOverlayEscPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
@@ -154,14 +149,67 @@ var onEffectControlsChange = function (evt) {
   if (effectElement.value !== 'none') {
     effectLevelElement.classList.remove('hidden');
     effectImagePreviewElement.classList.add('effect-' + effectElement.value);
-    effectLevelPinElement.addEventListener('mouseup', onEffectLevelPinMouseup);
     usedEffect = effectElement.value;
     changeSaturationLevel();
   } else {
-    effectLevelPinElement.removeEventListener('mouseup', onEffectLevelPinMouseup);
     effectLevelElement.classList.add('hidden');
+    effectImagePreviewElement.style.filter = '';
   }
 };
+
+var basicHandlers = [
+  {element: picturesElement,
+    eventType: 'click',
+    handler: onPicturesElementClick
+  },
+  {element: uploadFileElement,
+    eventType: 'change',
+    handler: onUploadFileChange
+  }
+];
+var openCloseOverlayHandlers = [
+  {element: galleryOverlayElement,
+    eventType: 'click',
+    handler: onOverlayCloseElementClick
+  },
+  {element: document,
+    eventType: 'keydown',
+    handler: onOverlayEscPress
+  }
+];
+var openCloseUploadHandlers = [
+  {element: uploadFormCancelElement,
+    eventType: 'click',
+    handler: onUploadFormCancelClick
+  },
+  {element: document,
+    eventType: 'keydown',
+    handler: onUploadOverlayEscPress
+  },
+  {element: effectControlsElement,
+    eventType: 'change',
+    handler: onEffectControlsChange
+  },
+  {element: effectLevelPinElement,
+    eventType: 'mouseup',
+    handler: onEffectLevelPinMouseup
+  },
+];
+
+var addRemoveListeners = function (element, eventType, handler, listanerAdd) {
+  if (listanerAdd) {
+    element.addEventListener(eventType, handler);
+  } else {
+    element.removeEventListener(eventType, handler);
+  }
+};
+
+var runHandlers = function (listenersArray, listanerAdd) {
+  for (var j = 0; j < listenersArray.length; j++) {
+    addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, listanerAdd);
+  }
+};
+
 var calculateSaturationLevel = function (element) {
   var levelLinePosition = effectLevelLineElement.getBoundingClientRect();
   var levelLineX = Math.floor(levelLinePosition.x);
@@ -182,18 +230,15 @@ var changeSaturationLevel = function () {
     if (effects[i].name === usedEffect) {
       saturationValue = saturationValue * effects[i].value / 100;
       if (effects[i].scale) {
-        effect = effects[i].filter + '(' + saturationValue + effects[i].scale + ');';
+        effect = effects[i].filter + '(' + saturationValue + effects[i].scale + ')';
       } else {
-        effect = effects[i].filter + '(' + saturationValue + ');';
+        effect = effects[i].filter + '(' + saturationValue + ')';
       }
     }
   }
-  console.log(effect);
   effectImagePreviewElement.style.filter = effect;
 };
 
 generateAllPictures();
 renderAllPictures(picturesElement, pictures);
-
-picturesElement.addEventListener('click', onPicturesElementClick);
-uploadFileElement.addEventListener('change', onUploadFileChange);
+runHandlers(basicHandlers, true);
