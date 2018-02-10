@@ -140,11 +140,8 @@ var onEffectLevelPinMouseup = function (evt) {
   calculateSaturationLevel(evt.target);
 };
 var onEffectControlsChange = function (evt) {
+  refreshEffectValues();
   var effectElement = evt.target;
-  effectImagePreviewElement.setAttribute('class', '');
-  effectImagePreviewElement.setAttribute('class', 'effect-image-preview ');
-  effectLevelValueElement.value = 100;
-  usedEffect = '';
 
   if (effectElement.value !== 'none') {
     effectLevelElement.classList.remove('hidden');
@@ -153,7 +150,56 @@ var onEffectControlsChange = function (evt) {
     changeSaturationLevel();
   } else {
     effectLevelElement.classList.add('hidden');
-    effectImagePreviewElement.style.filter = '';
+  }
+};
+
+var refreshEffectValues = function () {
+  effectImagePreviewElement.setAttribute('class', '');
+  effectImagePreviewElement.setAttribute('class', 'effect-image-preview ');
+  effectLevelValueElement.value = 100;
+  usedEffect = '';
+  effectImagePreviewElement.style.filter = '';
+};
+var calculateSaturationLevel = function (element) {
+  var levelLinePosition = effectLevelLineElement.getBoundingClientRect();
+  var levelLineWidth = levelLinePosition.width;
+  var levelLineX = Math.floor(levelLinePosition.x);
+
+  var levelPinPosition = element.getBoundingClientRect();
+  var levelPinWidth = levelPinPosition.width;
+  var levelPinX = Math.floor(levelPinPosition.x);
+  var levelPinValue = ((levelPinX + levelPinWidth / 2) - levelLineX) * 100 / levelLineWidth;
+
+  effectLevelValueElement.value = levelPinValue;
+  changeSaturationLevel();
+};
+var changeSaturationLevel = function () {
+  var saturationValue = effectLevelValueElement.value;
+  var effect = '';
+  for (var i = 0; i < effects.length; i++) {
+    if (effects[i].name === usedEffect) {
+      saturationValue = saturationValue * effects[i].value / 100;
+      if (effects[i].scale) {
+        effect = effects[i].filter + '(' + saturationValue + effects[i].scale + ')';
+      } else {
+        effect = effects[i].filter + '(' + saturationValue + ')';
+      }
+    }
+  }
+  effectImagePreviewElement.style.filter = effect;
+};
+
+var addRemoveListeners = function (element, eventType, handler, listenerAdd) {
+  if (listenerAdd) {
+    element.addEventListener(eventType, handler);
+  } else {
+    element.removeEventListener(eventType, handler);
+  }
+};
+
+var runHandlers = function (listenersArray, listenerAdd) {
+  for (var j = 0; j < listenersArray.length; j++) {
+    addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, listenerAdd);
   }
 };
 
@@ -195,49 +241,6 @@ var openCloseUploadHandlers = [
     handler: onEffectLevelPinMouseup
   },
 ];
-
-var addRemoveListeners = function (element, eventType, handler, listanerAdd) {
-  if (listanerAdd) {
-    element.addEventListener(eventType, handler);
-  } else {
-    element.removeEventListener(eventType, handler);
-  }
-};
-
-var runHandlers = function (listenersArray, listanerAdd) {
-  for (var j = 0; j < listenersArray.length; j++) {
-    addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, listanerAdd);
-  }
-};
-
-var calculateSaturationLevel = function (element) {
-  var levelLinePosition = effectLevelLineElement.getBoundingClientRect();
-  var levelLineX = Math.floor(levelLinePosition.x);
-  var levelLineWidth = levelLinePosition.width;
-
-  var levelPinPosition = element.getBoundingClientRect();
-  var levelPinWidth = levelPinPosition.width;
-  var levelPinX = Math.floor(levelPinPosition.x);
-  var levelPinValue = ((levelPinX + levelPinWidth / 2) - levelLineX) * 100 / levelLineWidth;
-
-  effectLevelValueElement.value = levelPinValue;
-  changeSaturationLevel();
-};
-var changeSaturationLevel = function () {
-  var saturationValue = effectLevelValueElement.value;
-  var effect = '';
-  for (var i = 0; i < effects.length; i++) {
-    if (effects[i].name === usedEffect) {
-      saturationValue = saturationValue * effects[i].value / 100;
-      if (effects[i].scale) {
-        effect = effects[i].filter + '(' + saturationValue + effects[i].scale + ')';
-      } else {
-        effect = effects[i].filter + '(' + saturationValue + ')';
-      }
-    }
-  }
-  effectImagePreviewElement.style.filter = effect;
-};
 
 generateAllPictures();
 renderAllPictures(picturesElement, pictures);
