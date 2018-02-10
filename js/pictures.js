@@ -4,6 +4,7 @@ var ALL_COMMENTS = ['Всё отлично!', 'В целом всё неплох
 var MAX_LIKES = 200;
 var MIN_LIKES = 15;
 var MAX_COMMENTS = 2;
+var ESC_CODE = 27;
 var pictures = [];
 
 var pictureTemplateElement = document.querySelector('#picture-template').content;
@@ -13,6 +14,9 @@ var overlayImageElement = galleryOverlayElement.querySelector('.gallery-overlay-
 var overlayCloseElement = galleryOverlayElement.querySelector('.gallery-overlay-close');
 var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
 var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
+var uploadFileElement = document.querySelector('#upload-file');
+var uploadOverlay = document.querySelector('.upload-overlay');
+var uploadFormCancelElement = uploadOverlay.querySelector('.upload-form-cancel');
 
 var getRandomNumber = function (max, min) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -70,13 +74,21 @@ var renderOverlay = function (photoElement) {
   commentsCountElement.textContent = photoCommentsCount;
 };
 
+var onOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    closeOverlay();
+  }
+};
+
 var openOverlay = function () {
   galleryOverlayElement.classList.remove('hidden');
   overlayCloseElement.addEventListener('click', onOverlayCloseElementClick);
+  document.addEventListener('keydown', onOverlayEscPress);
 };
 var closeOverlay = function () {
   galleryOverlayElement.classList.add('hidden');
   overlayCloseElement.removeEventListener('click', onOverlayCloseElementClick);
+  document.removeEventListener('keydown', onOverlayEscPress);
 };
 
 var onPicturesElementClick = function (evt) {
@@ -88,11 +100,38 @@ var onPicturesElementClick = function (evt) {
   }
 };
 
+var openUploadOverlay = function () {
+  uploadOverlay.classList.remove('hidden');
+  uploadFormCancelElement.addEventListener('click', onUploadFormCancelClick);
+  document.addEventListener('keydown', onUploadOverlayEscPress);
+};
+var closeUploadOverlay = function () {
+  uploadOverlay.classList.add('hidden');
+  uploadFileElement.value = '';
+  uploadFormCancelElement.removeEventListener('click', onUploadFormCancelClick);
+  document.removeEventListener('keydown', onUploadOverlayEscPress);
+};
+
+var onUploadOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_CODE) {
+    closeUploadOverlay();
+  }
+};
+
 var onOverlayCloseElementClick = function () {
   closeOverlay();
+};
+
+var onUploadFileChange = function () {
+  openUploadOverlay();
+};
+
+var onUploadFormCancelClick = function () {
+  closeUploadOverlay();
 };
 
 generateAllPictures();
 renderAllPictures(picturesElement, pictures);
 
 picturesElement.addEventListener('click', onPicturesElementClick);
+uploadFileElement.addEventListener('change', onUploadFileChange);
