@@ -104,6 +104,7 @@ var closeOverlay = function () {
 var openUploadOverlay = function () {
   uploadOverlay.classList.remove('hidden');
   effectLevelElement.classList.add('hidden');
+  refreshEffectValues();
   runHandlers(openCloseUploadHandlers, true);
 };
 var closeUploadOverlay = function () {
