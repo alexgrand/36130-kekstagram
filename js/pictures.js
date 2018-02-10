@@ -14,9 +14,17 @@ var overlayImageElement = galleryOverlayElement.querySelector('.gallery-overlay-
 var overlayCloseElement = galleryOverlayElement.querySelector('.gallery-overlay-close');
 var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
 var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
+
 var uploadFileElement = document.querySelector('#upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFormCancelElement = uploadOverlay.querySelector('.upload-form-cancel');
+
+var effectControlsElement = document.querySelector('.upload-effect-controls');
+var effectLevelPinElement = effectControlsElement.querySelector('.upload-effect-level-pin');
+var effectLevelLineElement = effectControlsElement.querySelector('.upload-effect-level-line');
+var effectLevelValueElement = effectControlsElement.querySelector('.upload-effect-level-value');
+
+var effectLevelValue = effectLevelValueElement.value;
 
 var getRandomNumber = function (max, min) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -30,7 +38,6 @@ var getCommentsArray = function (numOfComments) {
   }
   return comments;
 };
-
 var generatePictureObject = function (index) {
   return {
     url: 'photos/' + index + '.jpg',
@@ -46,13 +53,11 @@ var generatePictureObject = function (index) {
     }
   };
 };
-
 var generateAllPictures = function () {
   for (var i = 0; i < NUMBER_OF_PICTURES; i++) {
     pictures[i] = generatePictureObject(i + 1);
   }
 };
-
 var renderAllPictures = function (element, allPictures) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < allPictures.length; i++) {
@@ -73,13 +78,11 @@ var renderOverlay = function (photoElement) {
   likeCountElement.textContent = photoLikesCount;
   commentsCountElement.textContent = photoCommentsCount;
 };
-
 var onOverlayEscPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
     closeOverlay();
   }
 };
-
 var openOverlay = function () {
   galleryOverlayElement.classList.remove('hidden');
   overlayCloseElement.addEventListener('click', onOverlayCloseElementClick);
@@ -90,7 +93,9 @@ var closeOverlay = function () {
   overlayCloseElement.removeEventListener('click', onOverlayCloseElementClick);
   document.removeEventListener('keydown', onOverlayEscPress);
 };
-
+var onOverlayCloseElementClick = function () {
+  closeOverlay();
+};
 var onPicturesElementClick = function (evt) {
   if (evt.target.tagName === 'IMG') {
     evt.preventDefault();
@@ -100,34 +105,45 @@ var onPicturesElementClick = function (evt) {
   }
 };
 
+var onUploadFileChange = function () {
+  openUploadOverlay();
+};
 var openUploadOverlay = function () {
   uploadOverlay.classList.remove('hidden');
   uploadFormCancelElement.addEventListener('click', onUploadFormCancelClick);
   document.addEventListener('keydown', onUploadOverlayEscPress);
+  effectLevelPinElement.addEventListener('mouseup', onEffectLevelPinMouseup);
 };
 var closeUploadOverlay = function () {
   uploadOverlay.classList.add('hidden');
   uploadFileElement.value = '';
   uploadFormCancelElement.removeEventListener('click', onUploadFormCancelClick);
   document.removeEventListener('keydown', onUploadOverlayEscPress);
+  effectLevelPinElement.removeEventListener('mouseup', onEffectLevelPinMouseup);
 };
-
 var onUploadOverlayEscPress = function (evt) {
   if (evt.keyCode === ESC_CODE) {
     closeUploadOverlay();
   }
 };
-
-var onOverlayCloseElementClick = function () {
-  closeOverlay();
-};
-
-var onUploadFileChange = function () {
-  openUploadOverlay();
-};
-
 var onUploadFormCancelClick = function () {
   closeUploadOverlay();
+};
+
+var onEffectLevelPinMouseup = function (evt) {
+  calculateSaturationLevel(evt.target);
+};
+var calculateSaturationLevel = function (element) {
+  var levelLinePosition = effectLevelLineElement.getBoundingClientRect();
+  var levelLineX = Math.floor(levelLinePosition.x);
+  var levelLineWidth = levelLinePosition.width;
+
+  var levelPinPosition = element.getBoundingClientRect();
+  var levelPinWidth = levelPinPosition.width;
+  var levelPinX = Math.floor(levelPinPosition.x);
+  var levelPinValue = ((levelPinX + levelPinWidth / 2) - levelLineX) * 100 / levelLineWidth;
+
+  effectLevelValue = levelPinValue;
 };
 
 generateAllPictures();
