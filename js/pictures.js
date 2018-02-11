@@ -5,6 +5,16 @@ var MAX_LIKES = 200;
 var MIN_LIKES = 15;
 var MAX_COMMENTS = 2;
 var ESC_CODE = 27;
+var MAX_HASHTAG_LENGTH = 20;
+var MAX_COMMENTS_LENGTH = 140;
+var MAX_HASHTAGS = 5;
+var WARNING_NO_HASH = 'Хэш-тег начинается с символа # (решётка)';
+var WARNING_NO_TEXT = 'Хэш-тег начинается с символа # (решётка) и состоит из одного слова';
+var WARNING_NO_SPACES = 'Хэш-теги разделяются пробелами';
+var WARNING_TOO_MUCH_HASHTAGS = 'Нельзя указать больше пяти хэш-тегов';
+var WARNING_LONG_HASHTAG = 'Максимальная длина одного хэш-тега 20 символов';
+var WARNING_REPEATING_HASHTAG = 'Один и тот же хэш-тег не может быть использован дважды';
+var WARNING_LONG_COMMENT = 'Длина комментария не может составлять больше 140 символов';
 var pictures = [];
 
 var pictureTemplateElement = document.querySelector('#picture-template').content;
@@ -194,7 +204,58 @@ var changeSaturationLevel = function () {
   effectImagePreviewElement.style.filter = effect;
 };
 var validateInput = function (evt) {
-  console.log('test');
+  var inputElement = evt.target;
+  var inputValue = inputElement.value;
+  var invalidMessage = '';
+  if (inputElement.classList.value === 'upload-form-hashtags') {
+    invalidMessage = getWarningMessage(inputValue, true);
+  } else {
+    invalidMessage = getWarningMessage(inputValue, false);
+  }
+  if (invalidMessage) {
+    inputElement.setCustomValidity(invalidMessage);
+  } else {
+    inputElement.setCustomValidity('');
+  }
+};
+var getWarningMessage = function (value, isHashtag) {
+  var error = '';
+  if (isHashtag) {
+    var hashtags = value.split('#');
+    hashtags[hashtags.length - 1] += ' ';
+    if (hashtags.length > 0 && hashtags[0]) {
+      error = WARNING_NO_HASH;
+    }
+    for (var i = 1; i < hashtags.length; i++) {
+      var hashtagValue = hashtags[i];
+      var hashtagValueLastIndex = hashtagValue.length - 1;
+      var spaceIndex = hashtagValue.indexOf(' ');
+      if (spaceIndex > 0 && spaceIndex < hashtagValueLastIndex) {
+        error = WARNING_NO_HASH;
+      } else if (!hashtagValue[hashtagValueLastIndex]) {
+        error = WARNING_NO_TEXT;
+      } else if (spaceIndex === 0) {
+        error = WARNING_NO_TEXT;
+      } else if (spaceIndex < hashtagValueLastIndex) {
+        error = WARNING_NO_SPACES;
+      } else if (hashtagValue.length > MAX_HASHTAG_LENGTH - 1) {
+        error = WARNING_LONG_HASHTAG;
+      } else if (hashtags.length > MAX_HASHTAGS + 1) {
+        error = WARNING_TOO_MUCH_HASHTAGS;
+      } else if (i > 0) {
+        for (var j = 0; j < hashtags.length; j++) {
+          if (i !== j && hashtagValue.toLowerCase() === hashtags[j].toLowerCase()) {
+            error = WARNING_REPEATING_HASHTAG;
+          }
+        }
+      }
+    }
+  } else {
+    if (value.length > MAX_COMMENTS_LENGTH) {
+      error = WARNING_LONG_COMMENT;
+    }
+  }
+  return error;
 };
 
 var addRemoveListeners = function (element, eventType, handler, listenerAdd) {
