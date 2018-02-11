@@ -37,6 +37,7 @@ var effectLevelValueElement = effectControlsElement.querySelector('.upload-effec
 var effectImagePreviewElement = uploadOverlay.querySelector('.effect-image-preview');
 
 var uploadHastagsElement = uploadOverlay.querySelector('.upload-form-hashtags');
+var uploadCommentElement = uploadOverlay.querySelector('.upload-form-description');
 
 var effects = [
   {name: 'chrome', filter: 'grayscale', value: 1, scale: false},
@@ -141,7 +142,8 @@ var onUploadFileChange = function () {
   openUploadOverlay();
 };
 var onUploadOverlayEscPress = function (evt) {
-  if (evt.keyCode === ESC_CODE) {
+  var activeUserNameElement = document.activeElement.classList.contains('upload-form-description');
+  if (evt.keyCode === ESC_CODE && !activeUserNameElement) {
     closeUploadOverlay();
   }
 };
@@ -165,6 +167,9 @@ var onEffectControlsChange = function (evt) {
   }
 };
 var onUploadHashtagsInput = function (evt) {
+  validateInput(evt);
+};
+var onUploadCommentInput = function (evt) {
   validateInput(evt);
 };
 
@@ -206,12 +211,9 @@ var changeSaturationLevel = function () {
 var validateInput = function (evt) {
   var inputElement = evt.target;
   var inputValue = inputElement.value;
-  var invalidMessage = '';
-  if (inputElement.classList.value === 'upload-form-hashtags') {
-    invalidMessage = getWarningMessage(inputValue, true);
-  } else {
-    invalidMessage = getWarningMessage(inputValue, false);
-  }
+  var isHashtag = inputElement.classList.contains('upload-form-hashtags');
+  var invalidMessage = getWarningMessage(inputValue, isHashtag);
+
   if (invalidMessage) {
     inputElement.setCustomValidity(invalidMessage);
   } else {
@@ -219,43 +221,43 @@ var validateInput = function (evt) {
   }
 };
 var getWarningMessage = function (value, isHashtag) {
-  var error = '';
+  var errorMessage = '';
   if (isHashtag) {
     var hashtags = value.split('#');
     hashtags[hashtags.length - 1] += ' ';
     if (hashtags.length > 0 && hashtags[0]) {
-      error = WARNING_NO_HASH;
+      errorMessage = WARNING_NO_HASH;
     }
     for (var i = 1; i < hashtags.length; i++) {
       var hashtagValue = hashtags[i];
       var hashtagValueLastIndex = hashtagValue.length - 1;
       var spaceIndex = hashtagValue.indexOf(' ');
       if (spaceIndex > 0 && spaceIndex < hashtagValueLastIndex) {
-        error = WARNING_NO_HASH;
+        errorMessage = WARNING_NO_HASH;
       } else if (!hashtagValue[hashtagValueLastIndex]) {
-        error = WARNING_NO_TEXT;
+        errorMessage = WARNING_NO_TEXT;
       } else if (spaceIndex === 0) {
-        error = WARNING_NO_TEXT;
+        errorMessage = WARNING_NO_TEXT;
       } else if (spaceIndex < hashtagValueLastIndex) {
-        error = WARNING_NO_SPACES;
+        errorMessage = WARNING_NO_SPACES;
       } else if (hashtagValue.length > MAX_HASHTAG_LENGTH - 1) {
-        error = WARNING_LONG_HASHTAG;
+        errorMessage = WARNING_LONG_HASHTAG;
       } else if (hashtags.length > MAX_HASHTAGS + 1) {
-        error = WARNING_TOO_MUCH_HASHTAGS;
+        errorMessage = WARNING_TOO_MUCH_HASHTAGS;
       } else if (i > 0) {
         for (var j = 0; j < hashtags.length; j++) {
           if (i !== j && hashtagValue.toLowerCase() === hashtags[j].toLowerCase()) {
-            error = WARNING_REPEATING_HASHTAG;
+            errorMessage = WARNING_REPEATING_HASHTAG;
           }
         }
       }
     }
   } else {
     if (value.length > MAX_COMMENTS_LENGTH) {
-      error = WARNING_LONG_COMMENT;
+      errorMessage = WARNING_LONG_COMMENT;
     }
   }
-  return error;
+  return errorMessage;
 };
 
 var addRemoveListeners = function (element, eventType, handler, listenerAdd) {
@@ -312,6 +314,10 @@ var openCloseUploadHandlers = [
   {element: uploadHastagsElement,
     eventType: 'input',
     handler: onUploadHashtagsInput
+  },
+  {element: uploadCommentElement,
+    eventType: 'input',
+    handler: onUploadCommentInput
   }
 ];
 
