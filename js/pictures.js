@@ -26,6 +26,8 @@ var effectLevelLineElement = effectControlsElement.querySelector('.upload-effect
 var effectLevelValueElement = effectControlsElement.querySelector('.upload-effect-level-value');
 var effectImagePreviewElement = uploadOverlay.querySelector('.effect-image-preview');
 
+var uploadHastagsElement = uploadOverlay.querySelector('.upload-form-hashtags');
+
 var effects = [
   {name: 'chrome', filter: 'grayscale', value: 1, scale: false},
   {name: 'sepia', filter: 'sepia', value: 1, scale: false},
@@ -152,6 +154,9 @@ var onEffectControlsChange = function (evt) {
     effectLevelElement.classList.add('hidden');
   }
 };
+var onUploadHashtagsInput = function (evt) {
+  validateInput(evt);
+};
 
 var refreshEffectValues = function () {
   effectImagePreviewElement.setAttribute('class', '');
@@ -187,6 +192,9 @@ var changeSaturationLevel = function () {
     }
   }
   effectImagePreviewElement.style.filter = effect;
+};
+var validateInput = function (evt) {
+  console.log('test');
 };
 
 var addRemoveListeners = function (element, eventType, handler, listenerAdd) {
@@ -240,6 +248,10 @@ var openCloseUploadHandlers = [
     eventType: 'mouseup',
     handler: onEffectLevelPinMouseup
   },
+  {element: uploadHastagsElement,
+    eventType: 'input',
+    handler: onUploadHashtagsInput
+  }
 ];
 
 generateAllPictures();
