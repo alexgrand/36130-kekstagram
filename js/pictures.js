@@ -189,8 +189,6 @@
   };
 })();
 
-var ESC_CODE = 27;
-
 var uploadFileElement = document.querySelector('#upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
 var uploadFormCancelElement = uploadOverlay.querySelector('.upload-form-cancel');
@@ -213,10 +211,7 @@ var onUploadFileChange = function () {
   openUploadOverlay();
 };
 var onUploadFormEscPress = function (evt) {
-  var activeUserNameElement = document.activeElement.classList.contains('upload-form-description');
-  if (evt.keyCode === ESC_CODE && !activeUserNameElement) {
-    closeUploadOverlay();
-  }
+  window.utils.onDocumentEscPress(evt, closeUploadOverlay);
 };
 var onUploadFormCancelClick = function () {
   closeUploadOverlay();

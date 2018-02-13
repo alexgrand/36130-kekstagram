@@ -1,6 +1,14 @@
 'use strict';
 (function () {
+  var ESC_CODE = 27;
+
   window.utils = {
+    onDocumentEscPress: function (evt, closeFunction) {
+      var activeUserNameElement = document.activeElement.classList.contains('upload-form-description');
+      if (evt.keyCode === ESC_CODE && !activeUserNameElement) {
+        closeFunction();
+      }
+    },
     getRandomNumber: function (max, min) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },

@@ -19,9 +19,7 @@
     closeOverlayElement();
   };
   var onOverlayEscPress = function (evt) {
-    if (evt.keyCode === ESC_CODE) {
-      closeOverlayElement();
-    }
+    window.utils.onDocumentEscPress(evt, closeOverlayElement);
   };
 
   var renderOverlay = function (photoElement, allPictures) {
