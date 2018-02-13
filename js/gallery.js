@@ -1,4 +1,4 @@
-'use sctrict';
+'use strict';
 (function () {
   var picturesElement = document.querySelector('.pictures');
 
