@@ -3,6 +3,18 @@
   window.utils = {
     getRandomNumber: function (max, min) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+    addRemoveListeners: function (element, eventType, handler, listenerAdd) {
+      if (listenerAdd) {
+        element.addEventListener(eventType, handler);
+      } else {
+        element.removeEventListener(eventType, handler);
+      }
+    },
+    runHandlers: function (listenersArray, listenerAdd) {
+      for (var j = 0; j < listenersArray.length; j++) {
+        this.addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, listenerAdd);
+      }
     }
   };
 })();
@@ -63,15 +75,83 @@
   };
 })();
 
+(function () {
+  var galleryOverlayElement = document.querySelector('.gallery-overlay');
+  var overlayImageElement = galleryOverlayElement.querySelector('.gallery-overlay-image');
+  var overlayCloseElement = galleryOverlayElement.querySelector('.gallery-overlay-close');
+  var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
+  var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
+
+  var openOverlayElement = function (evt) {
+    galleryOverlayElement.classList.remove('hidden');
+    renderOverlay(evt.target, window.data.pictures);
+    window.utils.runHandlers(openCloseOverlayHandlers, true);
+  };
+  var closeOverlayElement = function () {
+    galleryOverlayElement.classList.add('hidden');
+    window.utils.runHandlers(openCloseOverlayHandlers, false);
+  };
+  var onOverlayCloseElementClick = function () {
+    closeOverlayElement();
+  };
+  var onOverlayEscPress = function (evt) {
+    if (evt.keyCode === ESC_CODE) {
+      closeOverlayElement();
+    }
+  };
+
+  var renderOverlay = function (photoElement, allPictures) {
+    var photoUrl = photoElement.getAttribute('src');
+    var digitIndex = photoUrl.search(/\d/g);
+    var photoFormat = '.jpg';
+    var photoIndex = photoUrl.slice(digitIndex, photoUrl.length - photoFormat.length) - 1;
+    var photoCommentsCount = allPictures[photoIndex].comments.length;
+    var photoLikesCount = allPictures[photoIndex].likes;
+
+    overlayImageElement.setAttribute('src', photoUrl);
+    likeCountElement.textContent = photoLikesCount;
+    commentsCountElement.textContent = photoCommentsCount;
+  };
+
+  var openCloseOverlayHandlers = [
+    {element: overlayCloseElement,
+      eventType: 'click',
+      handler: onOverlayCloseElementClick
+    },
+    {element: document,
+      eventType: 'keydown',
+      handler: onOverlayEscPress
+    }
+  ];
+
+  window.preview = {
+    openOverlay: openOverlayElement,
+    closeOverlay: closeOverlayElement
+  };
+})();
+
+(function () {
+  var picturesElement = document.querySelector('.pictures');
+
+  var onPicturesElementClick = function (evt) {
+    if (evt.target.tagName === 'IMG') {
+      evt.preventDefault();
+
+      window.preview.openOverlay(evt);
+    }
+  };
+
+  var pictureOverlayHandlers = [
+    {element: picturesElement,
+      eventType: 'click',
+      handler: onPicturesElementClick
+    }
+  ];
+  window.picture.renderAllPictures(picturesElement, window.data.pictures);
+  window.utils.runHandlers(pictureOverlayHandlers, true);
+})();
+
 var ESC_CODE = 27;
-
-var picturesElement = document.querySelector('.pictures');
-
-var galleryOverlayElement = document.querySelector('.gallery-overlay');
-var overlayImageElement = galleryOverlayElement.querySelector('.gallery-overlay-image');
-var overlayCloseElement = galleryOverlayElement.querySelector('.gallery-overlay-close');
-var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
-var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
 
 var uploadFileElement = document.querySelector('#upload-file');
 var uploadOverlay = document.querySelector('.upload-overlay');
@@ -93,54 +173,16 @@ var effects = [
 ];
 var usedEffect = '';
 
-var renderOverlay = function (photoElement, allPictures) {
-  var photoUrl = photoElement.getAttribute('src');
-  var digitIndex = photoUrl.search(/\d/g);
-  var photoFormat = '.jpg';
-  var photoIndex = photoUrl.slice(digitIndex, photoUrl.length - photoFormat.length) - 1;
-  var photoCommentsCount = allPictures[photoIndex].comments.length;
-  var photoLikesCount = allPictures[photoIndex].likes;
-
-  overlayImageElement.setAttribute('src', photoUrl);
-  likeCountElement.textContent = photoLikesCount;
-  commentsCountElement.textContent = photoCommentsCount;
-};
-var onOverlayEscPress = function (evt) {
-  if (evt.keyCode === ESC_CODE) {
-    closeOverlay();
-  }
-};
-
-var openOverlay = function () {
-  galleryOverlayElement.classList.remove('hidden');
-  runHandlers(openCloseOverlayHandlers, true);
-};
-var closeOverlay = function () {
-  galleryOverlayElement.classList.add('hidden');
-  runHandlers(openCloseOverlayHandlers, false);
-};
 var openUploadOverlay = function () {
   uploadOverlay.classList.remove('hidden');
   effectLevelElement.classList.add('hidden');
   refreshEffectValues();
-  runHandlers(openCloseUploadHandlers, true);
+  window.utils.runHandlers(openCloseUploadHandlers, true);
 };
 var closeUploadOverlay = function () {
   uploadOverlay.classList.add('hidden');
   uploadFileElement.value = '';
-  runHandlers(openCloseUploadHandlers, false);
-};
-
-var onOverlayCloseElementClick = function () {
-  closeOverlay();
-};
-var onPicturesElementClick = function (evt) {
-  if (evt.target.tagName === 'IMG') {
-    evt.preventDefault();
-
-    renderOverlay(evt.target, window.data.pictures);
-    openOverlay();
-  }
+  window.utils.runHandlers(openCloseUploadHandlers, false);
 };
 
 var onUploadFileChange = function () {
@@ -207,40 +249,13 @@ var changeSaturationLevel = function () {
   effectImagePreviewElement.style.filter = effect;
 };
 
-var addRemoveListeners = function (element, eventType, handler, listenerAdd) {
-  if (listenerAdd) {
-    element.addEventListener(eventType, handler);
-  } else {
-    element.removeEventListener(eventType, handler);
-  }
-};
-
-var runHandlers = function (listenersArray, listenerAdd) {
-  for (var j = 0; j < listenersArray.length; j++) {
-    addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, listenerAdd);
-  }
-};
-
 var basicHandlers = [
-  {element: picturesElement,
-    eventType: 'click',
-    handler: onPicturesElementClick
-  },
   {element: uploadFileElement,
     eventType: 'change',
     handler: onUploadFileChange
   }
 ];
-var openCloseOverlayHandlers = [
-  {element: overlayCloseElement,
-    eventType: 'click',
-    handler: onOverlayCloseElementClick
-  },
-  {element: document,
-    eventType: 'keydown',
-    handler: onOverlayEscPress
-  }
-];
+
 var openCloseUploadHandlers = [
   {element: uploadFormCancelElement,
     eventType: 'click',
@@ -260,5 +275,4 @@ var openCloseUploadHandlers = [
   },
 ];
 
-window.picture.renderAllPictures(picturesElement, window.data.pictures);
-runHandlers(basicHandlers, true);
+window.utils.runHandlers(basicHandlers, true);
