@@ -3,7 +3,7 @@
   var ESC_CODE = 27;
 
   window.utils = {
-    onDocumentEscPress: function (evt, trigger, closeFunction) {
+    onDocumentEscPress: function (evt, closeFunction) {
       var activeUserNameElement = document.activeElement.classList.contains('upload-form-description');
       if (evt.keyCode === ESC_CODE && !activeUserNameElement) {
         closeFunction();

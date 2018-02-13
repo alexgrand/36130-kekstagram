@@ -223,7 +223,6 @@
       handler: onUploadFileChange
     }
   ];
-
   var openCloseUploadHandlers = [
     {element: uploadFormCancelElement,
       eventType: 'click',
