@@ -15,8 +15,6 @@
   var MAX_COMMENTS = 2;
   var picturesArray = [];
 
-  var pictureTemplateElement = document.querySelector('#picture-template').content;
-
   var getCommentsArray = function (numOfComments) {
     var comments = [];
     for (var i = 0; i < numOfComments; i++) {
@@ -29,15 +27,7 @@
     return {
       url: 'photos/' + index + '.jpg',
       likes: window.utils.getRandomNumber(MAX_LIKES, MIN_LIKES),
-      comments: getCommentsArray(window.utils.getRandomNumber(MAX_COMMENTS, 1)),
-      renderPicture: function () {
-        var pictureElement = pictureTemplateElement.cloneNode(true);
-        pictureElement.querySelector('img').setAttribute('src', this.url);
-        pictureElement.querySelector('.picture-likes').textContent = this.likes;
-        pictureElement.querySelector('.picture-comments').textContent = this.comments.length;
-
-        return pictureElement;
-      }
+      comments: getCommentsArray(window.utils.getRandomNumber(MAX_COMMENTS, 1))
     };
   };
   var generateAllPictures = function () {
@@ -49,6 +39,27 @@
 
   window.data = {
     pictures: picturesArray
+  };
+})();
+
+(function () {
+  var pictureTemplateElement = document.querySelector('#picture-template').content;
+  var renderPicture = function (picture) {
+    var pictureElement = pictureTemplateElement.cloneNode(true);
+    pictureElement.querySelector('img').setAttribute('src', picture.url);
+    pictureElement.querySelector('.picture-likes').textContent = picture.likes;
+    pictureElement.querySelector('.picture-comments').textContent = picture.comments.length;
+
+    return pictureElement;
+  };
+  window.picture = {
+    renderAllPictures: function (element, allPictures) {
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < allPictures.length; i++) {
+        fragment.appendChild(renderPicture(allPictures[i]));
+      }
+      element.appendChild(fragment);
+    }
   };
 })();
 
@@ -81,14 +92,6 @@ var effects = [
   {name: 'heat', filter: 'brightness', value: 3, scale: false}
 ];
 var usedEffect = '';
-
-var renderAllPictures = function (element, allPictures) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < allPictures.length; i++) {
-    fragment.appendChild(allPictures[i].renderPicture());
-  }
-  element.appendChild(fragment);
-};
 
 var renderOverlay = function (photoElement, allPictures) {
   var photoUrl = photoElement.getAttribute('src');
@@ -257,5 +260,5 @@ var openCloseUploadHandlers = [
   },
 ];
 
-renderAllPictures(picturesElement, window.data.pictures);
+window.picture.renderAllPictures(picturesElement, window.data.pictures);
 runHandlers(basicHandlers, true);
