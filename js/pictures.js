@@ -129,10 +129,10 @@
     var errorMessage = '';
     if (isHashtag) {
       var hashtags = value.split('#');
-      hashtags[hashtags.length - 1] += ' ';
       if (hashtags.length > 0 && hashtags[0]) {
         errorMessage = WARNING_NO_HASH;
       }
+      hashtags[hashtags.length - 1] += ' ';
       for (var i = 1; i < hashtags.length; i++) {
         var hashtagValue = hashtags[i];
         var hashtagValueLastIndex = hashtagValue.length - 1;
