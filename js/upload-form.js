@@ -6,6 +6,7 @@
 
   var openUploadOverlay = function () {
     uploadOverlay.classList.remove('hidden');
+    window.scaling.addScalingHandlers();
     window.effects.addEffectsHandlers();
     window.validation.addValidationHandlers();
     window.utils.runHandlers(openCloseUploadHandlers, true);
@@ -13,6 +14,7 @@
   var closeUploadOverlay = function () {
     uploadOverlay.classList.add('hidden');
     uploadFileElement.value = '';
+    window.scaling.removeScalingHandlers();
     window.effects.removeEffectsHandlers();
     window.validation.removeValidationHandlers();
     window.utils.runHandlers(openCloseUploadHandlers, false);
