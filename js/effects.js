@@ -56,7 +56,6 @@
   };
   var onEffectControlsChange = function (evt) {
     refreshEffectValues();
-    effectValElement.style.width = effectLevelValueElement.value + '%';
     var effectElement = evt.target;
 
     if (effectElement.value !== 'none') {
@@ -72,7 +71,8 @@
     effectImagePreviewElement.setAttribute('class', '');
     effectImagePreviewElement.setAttribute('class', 'effect-image-preview ');
     effectLevelValueElement.value = 100;
-    effectLevelPinElement.style.left = '100%';
+    effectLevelPinElement.style.left = effectLevelValueElement.value + '%';
+    effectValElement.style.width = effectLevelPinElement.style.left;
     usedEffect = '';
     effectImagePreviewElement.style.filter = '';
   };
@@ -93,8 +93,7 @@
     var pinElement = effectLevelPinElement;
     var linePosition = getElementPosition(effectLevelLineElement);
     var pinPosition = getElementPosition(pinElement);
-    var pinMiddle = (pinPosition.right - pinPosition.left) / 2;
-    var levelPinValue = (pinPosition.left + pinMiddle - linePosition.left) * 100 / linePosition.width;
+    var levelPinValue = (pinPosition.middleX - linePosition.left) * 100 / linePosition.width;
     effectLevelValueElement.value = Math.floor(levelPinValue);
     changeSaturationLevel();
   };
