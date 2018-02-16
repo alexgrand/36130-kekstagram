@@ -75,6 +75,7 @@
     effectValElement.style.width = effectLevelPinElement.style.left;
     usedEffect = '';
     effectImagePreviewElement.style.filter = '';
+    window.scaling.setDefaultScale();
   };
   var getElementPosition = function (element) {
     var position = element.getBoundingClientRect();

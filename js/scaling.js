@@ -11,8 +11,6 @@
   var resizeValueElement = resizeControlsElement.querySelector('.upload-resize-controls-value');
   var effectImageElement = document.querySelector('.effect-image-preview');
 
-  resizeValueElement.value = scale + '%';
-
   var onResizeControlsClick = function (evt) {
     var element = evt.target;
     var buttonName = element.classList;
@@ -34,6 +32,10 @@
   ];
 
   window.scaling = {
+    setDefaultScale: function () {
+      resizeValueElement.value = MAXIMUM_SCALE + '%';
+      effectImageElement.style.transform = 'scale(' + MAXIMUM_SCALE / 100 + ')';
+    },
     addScalingHandlers: function () {
       window.utils.runHandlers(scalingHandlers, true);
     },
