@@ -9,6 +9,14 @@
       window.preview.openOverlay(evt);
     }
   };
+  var onSuccessHandler = function (picturesArray) {
+    window.picture.renderAllPictures(picturesElement, picturesArray);
+    window.data.pictures = picturesArray;
+    window.utils.runHandlers(pictureOverlayHandlers, true);
+  };
+  var onErrorHandler = function (errorMsg) {
+    window.utils.getErrorMessage('Ошибка соединения. Не удалось загрузить фотографии. \n' + errorMsg);
+  };
 
   var pictureOverlayHandlers = [
     {element: picturesElement,
@@ -16,6 +24,6 @@
       handler: onPicturesElementClick
     }
   ];
-  window.picture.renderAllPictures(picturesElement, window.data.pictures);
-  window.utils.runHandlers(pictureOverlayHandlers, true);
+
+  window.backend.load(onSuccessHandler, onErrorHandler);
 })();
