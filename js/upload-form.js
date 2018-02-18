@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var uploadFormElement = document.querySelector('.upload-form');
   var uploadFileElement = document.querySelector('#upload-file');
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadFormCancelElement = uploadOverlay.querySelector('.upload-form-cancel');
@@ -29,6 +30,17 @@
   var onUploadFormCancelClick = function () {
     closeUploadOverlay();
   };
+  var onUploadFormSubmit = function (evt) {
+    evt.preventDefault();
+    var data = new FormData(evt.target);
+    window.backend.upload(data, onFormSubmitSuccess, onFormSubmitError);
+  };
+  var onFormSubmitSuccess = function () {
+    closeUploadOverlay();
+  };
+  var onFormSubmitError = function (errorMsg) {
+    window.utils.getErrorMessage('Ошибка отправки фотографии. ' + errorMsg);
+  };
 
   var uploadHandlers = [
     {element: uploadFileElement,
@@ -44,9 +56,11 @@
     {element: document,
       eventType: 'keydown',
       handler: onUploadFormEscPress
-    }
+    },
+    {element: uploadFormElement,
+      eventType: 'submit',
+      handler: onUploadFormSubmit}
   ];
-
   window.utils.runHandlers(uploadHandlers, true);
 })();
 
