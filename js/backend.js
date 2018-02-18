@@ -1,9 +1,9 @@
 'use strict';
 (function () {
   window.backend = {
-    load: function (onLoad, onError) {
-      var DATA_URL = 'https://js.dump.academy/kekstagram/data';
-
+    DATA_URL: 'https://js.dump.academy/kekstagram/data',
+    UPLOAD_URL: 'https://js.dump.academy/kekstagram',
+    request: function (method, url, onLoad, onError, data) {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
       xhr.timeout = 10000;
@@ -26,9 +26,18 @@
       xhr.addEventListener('error', onXHRError);
       xhr.addEventListener('timeout', onXHRTimeout);
 
-      xhr.open('GET', DATA_URL);
-      xhr.send();
+      xhr.open(method, url);
+      if (method === 'GET') {
+        xhr.send();
+      } else if (method === 'POST') {
+        xhr.send(data);
+      }
+    },
+    load: function (onLoad, onError) {
+      this.request('GET', this.DATA_URL, onLoad, onError);
+    },
+    upload: function (data, onLoad, onError) {
+      this.request('POST', this.UPLOAD_URL, onLoad, onError, data);
     }
   };
 })();
-
