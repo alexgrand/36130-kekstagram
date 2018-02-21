@@ -22,14 +22,13 @@
       comments: getCommentsArray(window.utils.getRandomNumber(MAX_COMMENTS, 1))
     };
   };
-  var generateAllPictures = function () {
-    for (var i = 0; i < NUMBER_OF_PICTURES; i++) {
-      picturesArray[i] = generatePictureObject(i + 1);
-    }
-  };
-  generateAllPictures();
 
   window.data = {
-    pictures: picturesArray
+    pictures: picturesArray,
+    generateAllPictures: function () {
+      for (var i = 0; i < NUMBER_OF_PICTURES; i++) {
+        this.pictures.push(generatePictureObject(i + 1));
+      }
+    }
   };
 })();
