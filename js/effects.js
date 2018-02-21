@@ -10,11 +10,11 @@
   var effectValElement = effectsContainerElement.querySelector('.upload-effect-level-val');
 
   var effects = [
-    {name: 'chrome', filter: 'grayscale', value: 1, scale: false},
-    {name: 'sepia', filter: 'sepia', value: 1, scale: false},
-    {name: 'marvin', filter: 'invert', value: 100, scale: '%'},
-    {name: 'phobos', filter: 'blur', value: 3, scale: 'px'},
-    {name: 'heat', filter: 'brightness', value: 3, scale: false}
+    {'chrome': 'grayscale', 'value': 1, 'scale': ''},
+    {'sepia': 'sepia', 'value': 1, 'scale': ''},
+    {'marvin': 'invert', 'value': 100, 'scale': '%'},
+    {'phobos': 'blur', 'value': 3, 'scale': 'px'},
+    {'heat': 'brightness', 'value': 3, 'scale': ''}
   ];
   var usedEffect = '';
 
@@ -102,12 +102,10 @@
     var saturationValue = effectLevelValueElement.value;
     var effect = '';
     for (var i = 0; i < effects.length; i++) {
-      if (effects[i].name === usedEffect) {
-        saturationValue = saturationValue * effects[i].value / 100;
-        if (effects[i].scale) {
-          effect = effects[i].filter + '(' + saturationValue + effects[i].scale + ')';
-        } else {
-          effect = effects[i].filter + '(' + saturationValue + ')';
+      for (var effectName in effects[i]) {
+        if (usedEffect === effectName) {
+          saturationValue = saturationValue * effects[i]['value'] / 100;
+          effect = effects[i][usedEffect] + '(' + saturationValue + effects[i]['scale'] + ')';
         }
       }
     }
