@@ -12,12 +12,14 @@
   var onSuccessHandler = function (picturesArray) {
     window.picture.renderAllPictures(picturesElement, picturesArray);
     window.data.pictures = picturesArray;
+    window.filter.filtratePictures();
     window.utils.runHandlers(pictureOverlayHandlers, true);
   };
   var onErrorHandler = function (errorMsg) {
     window.utils.getErrorMessage('Ошибка соединения. Отображены старые фотографии. \n' + errorMsg);
     window.data.generateAllPictures();
     window.picture.renderAllPictures(picturesElement, window.data.pictures);
+    window.filter.filtratePictures();
   };
 
   var pictureOverlayHandlers = [

@@ -42,6 +42,29 @@
       for (var j = 0; j < listenersArray.length; j++) {
         this.addRemoveListeners(listenersArray[j].element, listenersArray[j].eventType, listenersArray[j].handler, listenerAdd);
       }
+    },
+    sortObjectsArray: function (pictures, sortBy) {
+      pictures.sort(function (left, right) {
+        var countDiff;
+        if (typeof left[sortBy] === 'object') {
+          countDiff = right[sortBy].length - left[sortBy].length;
+        } else {
+          countDiff = right[sortBy] - left[sortBy];
+        }
+
+        if (countDiff === 0) {
+          countDiff = pictures.indexOf(left) - pictures.indexOf(right);
+        }
+        return countDiff;
+      });
+    },
+    shuffleArray: function (array) {
+      for (var i = array.length - 1; i > 0; i--) {
+        var index = this.getRandomNumber(i, 0);
+        var buffer = array[index];
+        array[index] = array[i];
+        array[i] = buffer;
+      }
     }
   };
 })();
