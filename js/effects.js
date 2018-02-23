@@ -9,13 +9,13 @@
   var effectImagePreviewElement = effectsContainerElement.querySelector('.effect-image-preview');
   var effectValElement = effectsContainerElement.querySelector('.upload-effect-level-val');
 
-  var effects = [
-    {name: 'chrome', filter: 'grayscale', value: 1, scale: false},
-    {name: 'sepia', filter: 'sepia', value: 1, scale: false},
-    {name: 'marvin', filter: 'invert', value: 100, scale: '%'},
-    {name: 'phobos', filter: 'blur', value: 3, scale: 'px'},
-    {name: 'heat', filter: 'brightness', value: 3, scale: false}
-  ];
+  var effects = {
+    'chrome': {'filter': 'grayscale', 'value': 1, 'scale': ''},
+    'sepia': {'filter': 'sepia', 'value': 1, 'scale': ''},
+    'marvin': {'filter': 'invert', 'value': 100, 'scale': '%'},
+    'phobos': {'filter': 'blur', 'value': 3, 'scale': 'px'},
+    'heat': {'filter': 'brightness', 'value': 3, 'scale': ''}
+  };
   var usedEffect = '';
 
   var onEffectLevelPinMousedown = function (evt) {
@@ -100,18 +100,10 @@
   };
   var changeSaturationLevel = function () {
     var saturationValue = effectLevelValueElement.value;
-    var effect = '';
-    for (var i = 0; i < effects.length; i++) {
-      if (effects[i].name === usedEffect) {
-        saturationValue = saturationValue * effects[i].value / 100;
-        if (effects[i].scale) {
-          effect = effects[i].filter + '(' + saturationValue + effects[i].scale + ')';
-        } else {
-          effect = effects[i].filter + '(' + saturationValue + ')';
-        }
-      }
-    }
-    effectImagePreviewElement.style.filter = effect;
+    var styleOfEffect = '';
+    saturationValue *= effects[usedEffect]['value'] / 100;
+    styleOfEffect = effects[usedEffect]['filter'] + '(' + saturationValue + effects[usedEffect]['scale'] + ')';
+    effectImagePreviewElement.style.filter = styleOfEffect;
   };
 
   var effectsHandlers = [
