@@ -47,7 +47,6 @@
   ];
 
   window.preview = {
-    openOverlay: openOverlayElement,
-    closeOverlay: closeOverlayElement
+    openOverlay: openOverlayElement
   };
 })();
