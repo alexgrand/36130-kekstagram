@@ -24,13 +24,17 @@
   var onFilterChange = function (evt) {
     var usedFilter = evt.target.value;
     var allPicturesElements = picturesElement.querySelectorAll('.picture');
-    var allPictures = window.data.pictures.slice();
-
     allPicturesElements.forEach(removePicture);
-    if (usedFilter !== 'recommend') {
-      picturesFilters[usedFilter].sortPicturesData(allPictures);
-    }
-    window.utils.debounce(window.picture.renderAllPictures(picturesElement, allPictures));
+
+    var updatePictures = function () {
+      var allPictures = window.data.pictures.slice();
+      if (usedFilter !== 'recommend') {
+        picturesFilters[usedFilter].sortPicturesData(allPictures);
+      }
+      window.picture.renderAllPictures(picturesElement, allPictures);
+    };
+
+    window.utils.debounce(updatePictures);
   };
 
   var removePicture = function (element) {
