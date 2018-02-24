@@ -28,8 +28,10 @@
     var invalidMessage = getWarningMessage(inputValue, isHashtag);
 
     if (invalidMessage) {
+      inputElement.style.border = '2px solid red';
       inputElement.setCustomValidity(invalidMessage);
     } else {
+      inputElement.style.border = '';
       inputElement.setCustomValidity('');
     }
   };
