@@ -16,7 +16,7 @@
       sortingFunction: window.utils.shuffleArray
     },
     sortPicturesData: function (pictures, filter) {
-      this[filter].sortingFunction(pictures, this[filter].sortingArgument);
+      this[filter].sortingFunction.call(window.utils, pictures, this[filter].sortingArgument);
     }
   };
 

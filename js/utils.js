@@ -62,7 +62,7 @@
     },
     shuffleArray: function (array) {
       for (var i = array.length - 1; i > 0; i--) {
-        var index = window.utils.getRandomNumber(i, 0);
+        var index = this.getRandomNumber(i, 0);
         var buffer = array[index];
         array[index] = array[i];
         array[i] = buffer;
