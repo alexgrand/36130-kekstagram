@@ -28,8 +28,10 @@
     var invalidMessage = getWarningMessage(inputValue, isHashtag);
 
     if (invalidMessage) {
+      inputElement.style.border = '2px solid red';
       inputElement.setCustomValidity(invalidMessage);
     } else {
+      inputElement.style.border = '';
       inputElement.setCustomValidity('');
     }
   };
@@ -72,6 +74,14 @@
     }
     return errorMessage;
   };
+  var refreshInput = function () {
+    uploadHastagsElement.value = '';
+    uploadCommentElement.value = '';
+    uploadHastagsElement.setCustomValidity('');
+    uploadCommentElement.setCustomValidity('');
+    uploadHastagsElement.style.border = '';
+    uploadCommentElement.style.border = '';
+  };
 
   var hashtagCommentsHandlers = [
     {element: uploadHastagsElement,
@@ -86,8 +96,7 @@
 
   window.validation = {
     addValidationHandlers: function () {
-      uploadHastagsElement.value = '';
-      uploadCommentElement.value = '';
+      refreshInput();
       window.utils.runHandlers(hashtagCommentsHandlers, true);
     },
     removeValidationHandlers: function () {
