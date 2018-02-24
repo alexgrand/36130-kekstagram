@@ -5,19 +5,18 @@
 
   var picturesFilters = {
     discussed: {
-      sortPicturesData: function (pictures) {
-        window.utils.sortObjectsArray(pictures, 'comments');
-      }
+      sortingFunction: window.utils.sortObjectsArray,
+      sortingArgument: 'comments'
     },
     popular: {
-      sortPicturesData: function (pictures) {
-        window.utils.sortObjectsArray(pictures, 'likes');
-      }
+      sortingFunction: window.utils.sortObjectsArray,
+      sortingArgument: 'likes'
     },
     random: {
-      sortPicturesData: function (pictures) {
-        window.utils.shuffleArray(pictures);
-      }
+      sortingFunction: window.utils.shuffleArray
+    },
+    sortPicturesData: function (pictures, filter) {
+      this[filter].sortingFunction(pictures, this[filter].sortingArgument);
     }
   };
 
@@ -29,7 +28,8 @@
     var updatePictures = function () {
       var allPictures = window.data.pictures.slice();
       if (usedFilter !== 'recommend') {
-        picturesFilters[usedFilter].sortPicturesData(allPictures);
+        // picturesFilters[usedFilter].sortPicturesData(allPictures);
+        picturesFilters.sortPicturesData(allPictures, usedFilter);
       }
       window.picture.renderAllPictures(picturesElement, allPictures);
     };
