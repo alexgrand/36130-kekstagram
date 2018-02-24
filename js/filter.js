@@ -28,7 +28,6 @@
     var updatePictures = function () {
       var allPictures = window.data.pictures.slice();
       if (usedFilter !== 'recommend') {
-        // picturesFilters[usedFilter].sortPicturesData(allPictures);
         picturesFilters.sortPicturesData(allPictures, usedFilter);
       }
       window.picture.renderAllPictures(picturesElement, allPictures);
