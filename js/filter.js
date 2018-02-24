@@ -30,7 +30,7 @@
     if (usedFilter !== 'recommend') {
       picturesFilters[usedFilter].sortPicturesData(allPictures);
     }
-    window.picture.renderAllPictures(picturesElement, allPictures);
+    window.utils.debounce(window.picture.renderAllPictures(picturesElement, allPictures));
   };
 
   var removePicture = function (element) {

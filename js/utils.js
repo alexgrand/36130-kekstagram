@@ -1,6 +1,8 @@
 'use strict';
 (function () {
   var ESC_CODE = 27;
+  var DEBOUNCE_INTERVAL = 500;
+  var lastTimeout;
 
   var createMistakeElement = function () {
     var divElement = document.createElement('div');
@@ -65,6 +67,13 @@
         array[index] = array[i];
         array[i] = buffer;
       }
+    },
+
+    debounce: function (delayedAction) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(delayedAction, DEBOUNCE_INTERVAL);
     }
   };
 })();
