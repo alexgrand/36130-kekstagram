@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var filtersElement = document.querySelector('.filters');
+  var filtersRadioElements = filtersElement.querySelectorAll('input');
   var picturesElement = document.querySelector('.pictures');
 
   var picturesFilters = {
@@ -27,10 +28,12 @@
   var onFiltersEnterPress = function (evt) {
     if (evt.target.tagName === 'LABEL') {
       if (evt.keyCode === window.utils.code.ENTER) {
-        var filterInputElement = evt.target.previousElementSibling;
-        var usedFilter = filterInputElement.value;
-        filterInputElement.checked = true;
-        window.utils.debounce(updatePictures.bind(null, usedFilter));
+        var filterName = evt.target.getAttribute('for').split('-').pop();
+        var checkedFilter = [].find.call(filtersRadioElements, function (it) {
+          return it.getAttribute('id').split('-').pop() === filterName;
+        });
+        checkedFilter.checked = true;
+        window.utils.debounce(updatePictures.bind(null, filterName));
       }
     }
   };
