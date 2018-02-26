@@ -43,7 +43,10 @@
     window.utils.getErrorMessage('Ошибка отправки фотографии. ' + errorMsg);
   };
 
-  var createClickOnFile = function () {
+  var onUploadFileLabelEnterPress = function (evt) {
+    window.utils.onElementEnterPress(evt, createClickOnFileLabel);
+  };
+  var createClickOnFileLabel = function () {
     var event = new MouseEvent('click', {
       view: window,
       bubbles: true,
@@ -52,15 +55,14 @@
     uploadFileElement.dispatchEvent(event);
   };
 
-  var onUploadFileLabelEnterPress = function (evt) {
-    window.utils.onElementEnterPress(evt, createClickOnFile);
-  };
-  uploadFileLabelElement.addEventListener('keydown', onUploadFileLabelEnterPress);
-
   var uploadHandlers = [
     {element: uploadFileElement,
       eventType: 'change',
       handler: onUploadFileChange
+    },
+    {element: uploadFileLabelElement,
+      eventType: 'keydown',
+      handler: onUploadFileLabelEnterPress
     }
   ];
   var openCloseUploadHandlers = [
