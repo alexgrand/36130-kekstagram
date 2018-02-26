@@ -3,13 +3,15 @@
   var MAX_HASHTAG_LENGTH = 20;
   var MAX_COMMENTS_LENGTH = 140;
   var MAX_HASHTAGS = 5;
-  var WARNING_NO_HASH = 'Хэш-тег начинается с символа # (решётка)';
-  var WARNING_NO_TEXT = 'Хэш-тег начинается с символа # (решётка) и состоит из одного слова';
-  var WARNING_NO_SPACES = 'Хэш-теги разделяются пробелами';
-  var WARNING_TOO_MUCH_HASHTAGS = 'Нельзя указать больше пяти хэш-тегов';
-  var WARNING_LONG_HASHTAG = 'Максимальная длина одного хэш-тега 20 символов';
-  var WARNING_REPEATING_HASHTAG = 'Один и тот же хэш-тег не может быть использован дважды';
-  var WARNING_LONG_COMMENT = 'Длина комментария не может составлять больше 140 символов';
+  var Warning = {
+    NO_HASH: 'Хэш-тег начинается с символа # (решётка)',
+    NO_TEXT: 'Хэш-тег начинается с символа # (решётка) и состоит из одного слова',
+    NO_SPACES: 'Хэш-теги разделяются пробелами',
+    TOO_MUCH_HASHTAGS: 'Нельзя указать больше пяти хэш-тегов',
+    LONG_HASHTAG: 'Максимальная длина одного хэш-тега 20 символов',
+    REPEATING_HASHTAG: 'Один и тот же хэш-тег не может быть использован дважды',
+    LONG_COMMENT: 'Длина комментария не может составлять больше 140 символов'
+  };
 
   var uploadHastagsElement = document.querySelector('.upload-form-hashtags');
   var uploadCommentElement = document.querySelector('.upload-form-description');
@@ -40,7 +42,7 @@
     if (isHashtag) {
       var hashtags = value.split('#');
       if (hashtags.length > 0 && hashtags[0]) {
-        errorMessage = WARNING_NO_HASH;
+        errorMessage = Warning.NO_HASH;
       }
       hashtags[hashtags.length - 1] += ' ';
       for (var i = 1; i < hashtags.length; i++) {
@@ -48,28 +50,28 @@
         var hashtagValueLastIndex = hashtagValue.length - 1;
         var spaceIndex = hashtagValue.indexOf(' ');
         if (spaceIndex > 0 && spaceIndex < hashtagValueLastIndex) {
-          errorMessage = WARNING_NO_HASH;
+          errorMessage = Warning.NO_HASH;
         } else if (!hashtagValue[hashtagValueLastIndex]) {
-          errorMessage = WARNING_NO_TEXT;
+          errorMessage = Warning.NO_TEXT;
         } else if (spaceIndex === 0) {
-          errorMessage = WARNING_NO_TEXT;
+          errorMessage = Warning.NO_TEXT;
         } else if (spaceIndex < hashtagValueLastIndex) {
-          errorMessage = WARNING_NO_SPACES;
+          errorMessage = Warning.NO_SPACES;
         } else if (hashtagValue.length > MAX_HASHTAG_LENGTH - 1) {
-          errorMessage = WARNING_LONG_HASHTAG;
+          errorMessage = Warning.LONG_HASHTAG;
         } else if (hashtags.length > MAX_HASHTAGS + 1) {
-          errorMessage = WARNING_TOO_MUCH_HASHTAGS;
+          errorMessage = Warning.TOO_MUCH_HASHTAGS;
         } else if (i > 0) {
           for (var j = 0; j < hashtags.length; j++) {
             if (i !== j && hashtagValue.toLowerCase() === hashtags[j].toLowerCase()) {
-              errorMessage = WARNING_REPEATING_HASHTAG;
+              errorMessage = Warning.REPEATING_HASHTAG;
             }
           }
         }
       }
     } else {
       if (value.length > MAX_COMMENTS_LENGTH) {
-        errorMessage = WARNING_LONG_COMMENT;
+        errorMessage = Warning.LONG_COMMENT;
       }
     }
     return errorMessage;
