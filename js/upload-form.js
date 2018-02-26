@@ -21,8 +21,8 @@
     window.utils.runHandlers(openCloseUploadHandlers, false);
   };
 
-  var onUploadFileChange = function () {
-    openUploadOverlay();
+  var onUploadFileChange = function (evt) {
+    window.uploadFile.upload(evt.target, openUploadOverlay);
   };
   var onUploadFormEscPress = function (evt) {
     window.utils.onDocumentEscPress(evt, closeUploadOverlay);
