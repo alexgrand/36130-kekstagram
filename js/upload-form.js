@@ -2,6 +2,7 @@
 (function () {
   var uploadFormElement = document.querySelector('.upload-form');
   var uploadFileElement = document.querySelector('#upload-file');
+  var uploadFileLabelElement = uploadFormElement.querySelector('.upload-file');
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadFormCancelElement = uploadOverlay.querySelector('.upload-form-cancel');
 
@@ -42,6 +43,20 @@
     window.utils.getErrorMessage('Ошибка отправки фотографии. ' + errorMsg);
   };
 
+  var createClickOnFile = function () {
+    var event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    uploadFileElement.dispatchEvent(event);
+  };
+
+  var onUploadFileLabelEnterPress = function (evt) {
+    window.utils.onElementEnterPress(evt, createClickOnFile);
+  };
+  uploadFileLabelElement.addEventListener('keydown', onUploadFileLabelEnterPress);
+
   var uploadHandlers = [
     {element: uploadFileElement,
       eventType: 'change',
@@ -61,6 +76,8 @@
       eventType: 'submit',
       handler: onUploadFormSubmit}
   ];
+
+  window.utils.setElementTabindex(uploadFileLabelElement, 0);
   window.utils.runHandlers(uploadHandlers, true);
 })();
 
