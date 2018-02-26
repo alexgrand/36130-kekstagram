@@ -6,8 +6,6 @@
   var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
   var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
 
-  overlayCloseElement.setAttribute('tabindex', 2);
-
   var openOverlayElement = function (pictureElement) {
     galleryOverlayElement.classList.remove('hidden');
     renderOverlay(pictureElement, window.data.pictures);
@@ -54,6 +52,8 @@
       handler: onOverlayCloseEnterPress
     }
   ];
+
+  window.utils.setElementTabindex(overlayCloseElement, 2);
 
   window.preview = {
     openOverlay: openOverlayElement
