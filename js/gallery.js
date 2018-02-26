@@ -10,7 +10,7 @@
   };
   var onPicturesEnterPress = function (evt) {
     if (evt.target.firstElementChild.tagName === 'IMG') {
-      window.utils.onElementEnterPress(evt, window.preview.openOverlay.bind(window.preview, evt.target.firstElementChild));
+      window.utils.onElementEnterPress(evt, window.preview.openOverlay.bind(null, evt.target.firstElementChild));
     }
   };
 
