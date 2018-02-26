@@ -23,10 +23,10 @@
   };
 
   window.data = {
-    numberOfPictures: 25,
+    NUMBER_OF_PICTURES: 25,
     pictures: picturesArray,
     generateAllPictures: function () {
-      for (var i = 0; i < this.numberOfPictures; i++) {
+      for (var i = 0; i < this.NUMBER_OF_PICTURES; i++) {
         this.pictures.push(generatePictureObject(i + 1));
       }
     }

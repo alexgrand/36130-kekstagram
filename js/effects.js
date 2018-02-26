@@ -101,7 +101,7 @@
   var changeSaturationLevel = function () {
     var saturationValue = effectLevelValueElement.value;
     var styleOfEffect = '';
-    saturationValue *= effects[usedEffect]['value'] / 100;
+    saturationValue = saturationValue * effects[usedEffect]['value'] / 100;
     styleOfEffect = effects[usedEffect]['filter'] + '(' + saturationValue + effects[usedEffect]['scale'] + ')';
     effectImagePreviewElement.style.filter = styleOfEffect;
   };
