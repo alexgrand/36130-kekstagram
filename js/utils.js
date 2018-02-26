@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   var ESC_CODE = 27;
+  var ENTER_CODE = 13;
   var DEBOUNCE_INTERVAL = 500;
   var lastTimeout;
 
@@ -20,6 +21,12 @@
       var activeUserNameElement = document.activeElement.classList.contains('upload-form-description');
       if (evt.keyCode === ESC_CODE && !activeUserNameElement) {
         closeFunction();
+      }
+    },
+    onElementEnterPress: function (evt, action) {
+      if (evt.keyCode === ENTER_CODE) {
+        evt.preventDefault();
+        action();
       }
     },
     getErrorMessage: function (errorMsg) {

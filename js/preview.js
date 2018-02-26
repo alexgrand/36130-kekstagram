@@ -6,9 +6,9 @@
   var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
   var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
 
-  var openOverlayElement = function (evt) {
+  var openOverlayElement = function (pictureElement) {
     galleryOverlayElement.classList.remove('hidden');
-    renderOverlay(evt.target, window.data.pictures);
+    renderOverlay(pictureElement, window.data.pictures);
     window.utils.runHandlers(openCloseOverlayHandlers, true);
   };
   var closeOverlayElement = function () {
