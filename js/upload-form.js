@@ -44,9 +44,9 @@
   };
 
   var onUploadFileLabelEnterPress = function (evt) {
-    window.utils.onElementEnterPress(evt, createClickOnFileLabel);
+    window.utils.onElementEnterPress(evt, createClickEventonFileLabel);
   };
-  var createClickOnFileLabel = function () {
+  var createClickEventonFileLabel = function () {
     var event = new MouseEvent('click', {
       view: window,
       bubbles: true,
