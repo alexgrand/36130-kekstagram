@@ -21,10 +21,8 @@
   var usedEffect = '';
 
   var onEffectControlsEnterPress = function (evt) {
-    if (evt.keyCode === window.utils.code.ENTER) {
-      var effectName = evt.target.getAttribute('for').split('-').pop();
-      changeEffect(effectName);
-    }
+    var effectName = evt.target.getAttribute('for').split('-').pop();
+    window.utils.onElementEnterPress(evt, changeEffect.bind(null, effectName));
   };
 
   var onEffectLevelPinMousedown = function (evt) {
