@@ -8,6 +8,7 @@
   var effectLevelValueElement = effectControlsElement.querySelector('.upload-effect-level-value');
   var effectImagePreviewElement = effectsContainerElement.querySelector('.effect-image-preview');
   var effectValElement = effectsContainerElement.querySelector('.upload-effect-level-val');
+  var effectNoneElement = effectControlsElement.querySelector('#upload-effect-none');
 
   var effects = {
     'chrome': {'filter': 'grayscale', 'value': 1, 'scale': ''},
@@ -119,6 +120,7 @@
   window.effects = {
     addEffectsHandlers: function () {
       effectLevelElement.classList.add('hidden');
+      effectNoneElement.checked = true;
       refreshEffectValues();
       window.utils.runHandlers(effectsHandlers, true);
     },
