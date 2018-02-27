@@ -115,7 +115,7 @@
   };
   var addEffectsUsability = function () {
     effectLabelElements.forEach(function (it) {
-      window.utils.setElementTabindex(it, 0);
+      window.utils.setElementTabIndex(it, 0);
     });
   };
 

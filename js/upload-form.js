@@ -44,9 +44,9 @@
   };
 
   var onUploadFileLabelEnterPress = function (evt) {
-    window.utils.onElementEnterPress(evt, createClickEventonFileLabel);
+    window.utils.onElementEnterPress(evt, createClickEventOnFileLabel);
   };
-  var createClickEventonFileLabel = function () {
+  var createClickEventOnFileLabel = function () {
     var event = new MouseEvent('click', {
       view: window,
       bubbles: true,
@@ -79,7 +79,7 @@
       handler: onUploadFormSubmit}
   ];
 
-  window.utils.setElementTabindex(uploadFileLabelElement, 0);
+  window.utils.setElementTabIndex(uploadFileLabelElement, 0);
   window.utils.runHandlers(uploadHandlers, true);
 })();
 

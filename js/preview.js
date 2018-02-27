@@ -53,7 +53,7 @@
     }
   ];
 
-  window.utils.setElementTabindex(overlayCloseElement, 2);
+  window.utils.setElementTabIndex(overlayCloseElement, 2);
 
   window.preview = {
     openOverlay: openOverlayElement

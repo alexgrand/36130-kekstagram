@@ -3,8 +3,8 @@
   var picturesElement = document.querySelector('.pictures');
 
   var onPicturesClick = function (evt) {
+    evt.preventDefault();
     if (evt.target.tagName === 'IMG') {
-      evt.preventDefault();
       window.preview.openOverlay(evt.target);
     }
   };

@@ -44,7 +44,7 @@
   var addFiltersUsability = function () {
     var allFilters = filtersElement.querySelectorAll('label');
     allFilters.forEach(function (it) {
-      window.utils.setElementTabindex(it, 0);
+      window.utils.setElementTabIndex(it, 0);
     });
   };
   var updatePictures = function (usedFilter) {

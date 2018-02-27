@@ -84,7 +84,7 @@
       }
       lastTimeout = window.setTimeout(delayedAction, DEBOUNCE_INTERVAL);
     },
-    setElementTabindex: function (element, index) {
+    setElementTabIndex: function (element, index) {
       element.setAttribute('tabindex', index);
     }
   };
