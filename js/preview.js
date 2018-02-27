@@ -33,6 +33,12 @@
     var photoCommentsCount = allPictures[photoIndex].comments.length;
     var photoLikesCount = allPictures[photoIndex].likes;
 
+    if (!photoCommentsCount) {
+      photoCommentsCount = 0;
+    } else if (!photoLikesCount) {
+      photoLikesCount = '';
+    }
+
     overlayImageElement.setAttribute('src', photoUrl);
     likeCountElement.textContent = photoLikesCount;
     commentsCountElement.textContent = photoCommentsCount;

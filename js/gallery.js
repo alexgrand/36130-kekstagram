@@ -25,6 +25,7 @@
     window.data.generateAllPictures();
     window.picture.renderAllPictures(picturesElement, window.data.pictures);
     window.filter.filtratePictures();
+    window.utils.runHandlers(pictureOverlayHandlers, true);
   };
 
   var pictureOverlayHandlers = [
