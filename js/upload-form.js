@@ -2,6 +2,7 @@
 (function () {
   var uploadFormElement = document.querySelector('.upload-form');
   var uploadFileElement = document.querySelector('#upload-file');
+  var uploadFileLabelElement = uploadFormElement.querySelector('.upload-file');
   var uploadOverlay = document.querySelector('.upload-overlay');
   var uploadFormCancelElement = uploadOverlay.querySelector('.upload-form-cancel');
 
@@ -21,8 +22,8 @@
     window.utils.runHandlers(openCloseUploadHandlers, false);
   };
 
-  var onUploadFileChange = function () {
-    openUploadOverlay();
+  var onUploadFileChange = function (evt) {
+    window.uploadFile.upload(evt.target, openUploadOverlay);
   };
   var onUploadFormEscPress = function (evt) {
     window.utils.onDocumentEscPress(evt, closeUploadOverlay);
@@ -42,10 +43,26 @@
     window.utils.getErrorMessage('Ошибка отправки фотографии. ' + errorMsg);
   };
 
+  var onUploadFileLabelEnterPress = function (evt) {
+    window.utils.onElementEnterPress(evt, createClickEventOnFileLabel);
+  };
+  var createClickEventOnFileLabel = function () {
+    var event = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    });
+    uploadFileElement.dispatchEvent(event);
+  };
+
   var uploadHandlers = [
     {element: uploadFileElement,
       eventType: 'change',
       handler: onUploadFileChange
+    },
+    {element: uploadFileLabelElement,
+      eventType: 'keydown',
+      handler: onUploadFileLabelEnterPress
     }
   ];
   var openCloseUploadHandlers = [
@@ -61,6 +78,8 @@
       eventType: 'submit',
       handler: onUploadFormSubmit}
   ];
+
+  window.utils.setElementTabIndex(uploadFileLabelElement, 0);
   window.utils.runHandlers(uploadHandlers, true);
 })();
 

@@ -6,9 +6,9 @@
   var likeCountElement = galleryOverlayElement.querySelector('.likes-count');
   var commentsCountElement = galleryOverlayElement.querySelector('.comments-count');
 
-  var openOverlayElement = function (evt) {
+  var openOverlayElement = function (pictureElement) {
     galleryOverlayElement.classList.remove('hidden');
-    renderOverlay(evt.target, window.data.pictures);
+    renderOverlay(pictureElement, window.data.pictures);
     window.utils.runHandlers(openCloseOverlayHandlers, true);
   };
   var closeOverlayElement = function () {
@@ -21,6 +21,9 @@
   var onOverlayEscPress = function (evt) {
     window.utils.onDocumentEscPress(evt, closeOverlayElement);
   };
+  var onOverlayCloseEnterPress = function (evt) {
+    window.utils.onElementEnterPress(evt, closeOverlayElement);
+  };
 
   var renderOverlay = function (photoElement, allPictures) {
     var photoUrl = photoElement.getAttribute('src');
@@ -29,6 +32,12 @@
     var photoIndex = photoUrl.slice(digitIndex, photoUrl.length - photoFormat.length) - 1;
     var photoCommentsCount = allPictures[photoIndex].comments.length;
     var photoLikesCount = allPictures[photoIndex].likes;
+
+    if (!photoCommentsCount) {
+      photoCommentsCount = 0;
+    } else if (!photoLikesCount) {
+      photoLikesCount = '';
+    }
 
     overlayImageElement.setAttribute('src', photoUrl);
     likeCountElement.textContent = photoLikesCount;
@@ -43,8 +52,14 @@
     {element: document,
       eventType: 'keydown',
       handler: onOverlayEscPress
+    },
+    {element: overlayCloseElement,
+      eventType: 'keydown',
+      handler: onOverlayCloseEnterPress
     }
   ];
+
+  window.utils.setElementTabIndex(overlayCloseElement, 2);
 
   window.preview = {
     openOverlay: openOverlayElement

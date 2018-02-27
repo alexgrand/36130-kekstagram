@@ -1,6 +1,9 @@
 'use strict';
 (function () {
-  var ESC_CODE = 27;
+  var Code = {
+    ESC: 27,
+    ENTER: 13
+  };
   var DEBOUNCE_INTERVAL = 500;
   var lastTimeout;
 
@@ -15,11 +18,18 @@
   createMistakeElement();
 
   window.utils = {
+    code: Code,
     errorElement: document.querySelector('.mistake'),
     onDocumentEscPress: function (evt, closeFunction) {
       var activeUserNameElement = document.activeElement.classList.contains('upload-form-description');
-      if (evt.keyCode === ESC_CODE && !activeUserNameElement) {
+      if (evt.keyCode === Code.ESC && !activeUserNameElement) {
         closeFunction();
+      }
+    },
+    onElementEnterPress: function (evt, action) {
+      if (evt.keyCode === Code.ENTER) {
+        evt.preventDefault();
+        action();
       }
     },
     getErrorMessage: function (errorMsg) {
@@ -68,12 +78,14 @@
         array[i] = buffer;
       }
     },
-
     debounce: function (delayedAction) {
       if (lastTimeout) {
         window.clearTimeout(lastTimeout);
       }
       lastTimeout = window.setTimeout(delayedAction, DEBOUNCE_INTERVAL);
+    },
+    setElementTabIndex: function (element, index) {
+      element.setAttribute('tabindex', index);
     }
   };
 })();

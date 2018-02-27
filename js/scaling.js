@@ -31,6 +31,8 @@
     }
   ];
 
+  window.utils.setElementTabIndex(resizeValueElement, -1);
+
   window.scaling = {
     setDefaultScale: function () {
       resizeValueElement.value = MAXIMUM_SCALE + '%';

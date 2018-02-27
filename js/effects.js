@@ -2,12 +2,14 @@
 (function () {
   var effectsContainerElement = document.querySelector('.upload-effect__container');
   var effectControlsElement = effectsContainerElement.querySelector('.upload-effect-controls');
+  var effectLabelElements = effectControlsElement.querySelectorAll('.upload-effect-label');
   var effectLevelElement = effectControlsElement.querySelector('.upload-effect-level');
   var effectLevelPinElement = effectControlsElement.querySelector('.upload-effect-level-pin');
   var effectLevelLineElement = effectControlsElement.querySelector('.upload-effect-level-line');
   var effectLevelValueElement = effectControlsElement.querySelector('.upload-effect-level-value');
   var effectImagePreviewElement = effectsContainerElement.querySelector('.effect-image-preview');
   var effectValElement = effectsContainerElement.querySelector('.upload-effect-level-val');
+  var effectNoneElement = effectControlsElement.querySelector('#upload-effect-none');
 
   var effects = {
     'chrome': {'filter': 'grayscale', 'value': 1, 'scale': ''},
@@ -17,6 +19,11 @@
     'heat': {'filter': 'brightness', 'value': 3, 'scale': ''}
   };
   var usedEffect = '';
+
+  var onEffectControlsEnterPress = function (evt) {
+    var effectName = evt.target.getAttribute('for').split('-').pop();
+    window.utils.onElementEnterPress(evt, changeEffect.bind(null, effectName));
+  };
 
   var onEffectLevelPinMousedown = function (evt) {
     evt.preventDefault();
@@ -55,18 +62,19 @@
     document.addEventListener('mouseup', onEffectLevelPinMouseUp);
   };
   var onEffectControlsChange = function (evt) {
-    refreshEffectValues();
-    var effectElement = evt.target;
+    changeEffect(evt.target.value);
+  };
 
-    if (effectElement.value !== 'none') {
+  var changeEffect = function (effectName) {
+    refreshEffectValues();
+    if (effectName !== 'none') {
       effectLevelElement.classList.remove('hidden');
-      effectImagePreviewElement.classList.add('effect-' + effectElement.value);
-      usedEffect = effectElement.value;
+      effectImagePreviewElement.classList.add('effect-' + effectName);
+      usedEffect = effectName;
     } else {
       effectLevelElement.classList.add('hidden');
     }
   };
-
   var refreshEffectValues = function () {
     effectImagePreviewElement.setAttribute('class', '');
     effectImagePreviewElement.setAttribute('class', 'effect-image-preview ');
@@ -101,9 +109,14 @@
   var changeSaturationLevel = function () {
     var saturationValue = effectLevelValueElement.value;
     var styleOfEffect = '';
-    saturationValue *= effects[usedEffect]['value'] / 100;
+    saturationValue = saturationValue * effects[usedEffect]['value'] / 100;
     styleOfEffect = effects[usedEffect]['filter'] + '(' + saturationValue + effects[usedEffect]['scale'] + ')';
     effectImagePreviewElement.style.filter = styleOfEffect;
+  };
+  var addEffectsUsability = function () {
+    effectLabelElements.forEach(function (it) {
+      window.utils.setElementTabIndex(it, 0);
+    });
   };
 
   var effectsHandlers = [
@@ -115,10 +128,16 @@
       eventType: 'mousedown',
       handler: onEffectLevelPinMousedown
     },
+    {element: effectControlsElement,
+      eventType: 'keydown',
+      handler: onEffectControlsEnterPress
+    }
   ];
   window.effects = {
     addEffectsHandlers: function () {
       effectLevelElement.classList.add('hidden');
+      effectNoneElement.checked = true;
+      addEffectsUsability();
       refreshEffectValues();
       window.utils.runHandlers(effectsHandlers, true);
     },
